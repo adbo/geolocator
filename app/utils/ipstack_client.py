@@ -3,8 +3,8 @@ import requests
 from core.config import Settings
 from core.exceptions import IPStackAPIError
 
-settings = Settings()
 
+settings = Settings()
 IPSTACK_API_URL = "https://api.ipstack.com/"
 
 def get_geolocation_data(ip_or_url: str):

@@ -3,7 +3,6 @@ from sqlmodel import Session, select
 from db.models import Geolocation
 from utils.ipstack_client import get_geolocation_data
 
-
 def get_geolocation(db: Session, ip_or_url: str, force_refresh: bool = False):
     geolocation_db = db.get(Geolocation, ip_or_url)
 
