@@ -14,6 +14,7 @@ def get_geolocation_data(ip_or_url: str):
     try:
         response = requests.get(url, params)
         response.raise_for_status()
+        return response
     except requests.exceptions.RequestException as e:
         raise IPStackAPIError(detail=f"Error connecting to IPStack API: {e}")
     except ValueError:

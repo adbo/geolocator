@@ -1,7 +1,9 @@
+from datetime import datetime
+from decimal import Decimal
 from typing import Optional
 from sqlmodel import SQLModel, Field, DateTime
 from sqlalchemy.sql import func
-from sqlalchemy.sql.sqltypes import Numeric
+from sqlalchemy.sql.sqltypes import JSON
 
 
 class Geolocation(SQLModel, table=True):
@@ -14,8 +16,8 @@ class Geolocation(SQLModel, table=True):
     country_name: Optional[str] = None
     region_name: Optional[str] = None
     city: Optional[str] = None
-    latitude: Optional[Numeric] = Field(sa_column_kwargs={"type_": Numeric(precision=9, scale=6)})
-    longitude: Optional[Numeric] = Field(sa_column_kwargs={"type_": Numeric(precision=9, scale=6)})
-    raw_data: Optional[dict] = None
-    created_at: Optional[DateTime] = Field(default_factory=func.now)
-    updated_at: Optional[DateTime] = Field(default_factory=func.now, sa_column_kwargs={"onupdate": func.now()})
+    latitude: Optional[Decimal]
+    longitude: Optional[Decimal]
+    raw_data: Optional[dict] = Field(sa_type=JSON)
+    created_at: Optional[datetime] = Field(default_factory=func.now)
+    updated_at: Optional[datetime] = Field(default_factory=func.now, sa_column_kwargs={"onupdate": func.now()})
