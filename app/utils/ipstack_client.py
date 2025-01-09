@@ -20,7 +20,7 @@ def get_geolocation_data(ip_or_url: str):
         if not data.get("success", True):
             error = data.get("error", {})
             raise IPStackAPIError(
-                detail=f"IPStack API Error: {error.get('type', 'Unknown')}",
+                detail=f"IPStack API Error: {error.get('info', 'Unknown')}",
                 error_code=error.get("code"),
                 error_type=error.get("type"),
                 error_info=error.get("info"),
