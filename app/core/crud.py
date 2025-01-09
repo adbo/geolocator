@@ -9,9 +9,12 @@ from sqlalchemy.exc import SQLAlchemyError
 def get_geolocation_from_db(db: Session, ip_or_url: str):
     """Retrieves geolocation data from the database by IP address or URL."""
     try:
-        return db.exec(select(Geolocation).where(Geolocation.ip_or_url == ip_or_url)).first()
+        return db.exec(
+            select(Geolocation).where(Geolocation.ip_or_url == ip_or_url)
+        ).first()
     except SQLAlchemyError as e:
         raise
+
 
 def get_or_create_geolocation(db: Session, ip_or_url: str):
     """
@@ -39,7 +42,7 @@ def get_or_create_geolocation(db: Session, ip_or_url: str):
         "city": geolocation_data.get("city"),
         "latitude": geolocation_data.get("latitude"),
         "longitude": geolocation_data.get("longitude"),
-        "raw_data": geolocation_data
+        "raw_data": geolocation_data,
     }
 
     geolocation = Geolocation(**geolocation_fields)
@@ -52,9 +55,12 @@ def get_or_create_geolocation(db: Session, ip_or_url: str):
         db.rollback()
         raise
 
+
 def delete_geolocation_from_db(db: Session, ip_or_url: str):
     """Deletes geolocation data from the database by IP address or URL."""
-    geolocation = db.exec(select(Geolocation).where(Geolocation.ip_or_url == ip_or_url)).first()
+    geolocation = db.exec(
+        select(Geolocation).where(Geolocation.ip_or_url == ip_or_url)
+    ).first()
 
     if geolocation:
         try:

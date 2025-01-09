@@ -7,6 +7,7 @@ from core.exceptions import IPStackAPIError
 settings = Settings()
 IPSTACK_API_URL = "https://api.ipstack.com/"
 
+
 def get_geolocation_data(ip_or_url: str):
     """Fetches geolocation data from the IPStack API."""
     url = f"{IPSTACK_API_URL}{ip_or_url}"

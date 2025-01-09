@@ -8,6 +8,7 @@ from sqlalchemy.sql.sqltypes import JSON
 
 class Geolocation(SQLModel, table=True):
     """Represents geolocation data stored in the database."""
+
     id: Optional[int] = Field(default=None, primary_key=True)
     ip: Optional[str] = Field(index=True)
     ip_or_url: str = Field(unique=True, index=True)
@@ -21,4 +22,6 @@ class Geolocation(SQLModel, table=True):
     longitude: Optional[Decimal]
     raw_data: Optional[dict] = Field(sa_type=JSON)
     created_at: datetime = Field(default_factory=datetime.now, nullable=False)
-    updated_at: Optional[datetime] = Field(default_factory=datetime.now, sa_column_kwargs={'onupdate': datetime.now})
+    updated_at: Optional[datetime] = Field(
+        default_factory=datetime.now, sa_column_kwargs={"onupdate": datetime.now}
+    )
