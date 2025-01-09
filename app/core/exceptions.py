@@ -12,7 +12,13 @@ class GeolocationNotFound(HTTPException):
 class IPStackAPIError(HTTPException):
     """Custom exception for errors when interacting with the IPStack API."""
 
-    def __init__(self, detail: str, error_code: int = None, error_type: str = None, error_info: str = None):
+    def __init__(
+        self,
+        detail: str,
+        error_code: int = None,
+        error_type: str = None,
+        error_info: str = None,
+    ):
         self.error_code = error_code
         self.error_type = error_type
         self.error_info = error_info

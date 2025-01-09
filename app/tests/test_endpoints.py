@@ -7,6 +7,7 @@ from core.exceptions import IPStackAPIError
 from db.database import get_db
 from unittest.mock import patch
 
+
 @pytest.fixture(name="session")
 def session_fixture():
     engine = create_engine(
@@ -18,6 +19,7 @@ def session_fixture():
     with Session(engine) as session:
         yield session
 
+
 @pytest.fixture(name="client")
 def client_fixture(session: Session):
     def override_get_db():
@@ -27,6 +29,7 @@ def client_fixture(session: Session):
     client = TestClient(app)
     yield client
     app.dependency_overrides.pop(get_db, None)
+
 
 mock_ipstack_response = {
     "ip": "8.8.8.8",
@@ -49,13 +52,16 @@ mock_ipstack_response = {
     "is_eu": False,
 }
 
+
 def test_create_geolocation(client: TestClient):
     with patch("core.crud.get_geolocation_data", return_value=mock_ipstack_response):
         response = client.post("/api/v1/geolocations", json={"ip_or_url": "8.8.8.8"})
         assert response.status_code == 201
 
+
 def test_read_geolocation(client: TestClient, session: Session):
     from db.models import Geolocation
+
     geolocation_data = Geolocation(**mock_ipstack_response, ip_or_url="8.8.8.8")
     session.add(geolocation_data)
     session.commit()
@@ -63,13 +69,16 @@ def test_read_geolocation(client: TestClient, session: Session):
     response = client.get("/api/v1/geolocations/8.8.8.8")
     assert response.status_code == 200
 
+
 def test_read_geolocation_not_found(client: TestClient):
     response = client.get("/api/v1/geolocations/1.1.1.1")
     assert response.status_code == 404
     assert response.json()["detail"] == "Geolocation for '1.1.1.1' not found"
 
+
 def test_delete_geolocation(client: TestClient, session: Session):
     from db.models import Geolocation
+
     geolocation_data = Geolocation(**mock_ipstack_response, ip_or_url="8.8.8.8")
     session.add(geolocation_data)
     session.commit()
@@ -77,10 +86,12 @@ def test_delete_geolocation(client: TestClient, session: Session):
     response = client.delete("/api/v1/geolocations/8.8.8.8")
     assert response.status_code == 204
 
+
 def test_delete_geolocation_not_found(client: TestClient):
     response = client.delete("/api/v1/geolocations/1.1.1.1")
     assert response.status_code == 404
     assert response.json()["detail"] == "Geolocation for '1.1.1.1' not found"
+
 
 def test_create_geolocation_existing(client: TestClient):
     with patch("core.crud.get_geolocation_data", return_value=mock_ipstack_response):
@@ -94,9 +105,11 @@ def test_create_geolocation_existing(client: TestClient):
         )
         assert response_second_create.status_code == 200
 
+
 def test_create_geolocation_invalid_input(client: TestClient):
     response = client.post("/api/v1/geolocations", json={"invalid_field": "value"})
     assert response.status_code == 422
+
 
 def test_create_geolocation_ipstack_error(client: TestClient):
     with patch(
